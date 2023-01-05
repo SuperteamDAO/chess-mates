@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model QrCodes {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  qr_code_id String @unique
+  reference  String @unique
+  user       String
+  name       String
+  symbol     String
+  uri        String
+  label      String @default("CandyPay")
+  icon       String @default("https://candypay.fun/icon.png")
+  network    String
+  solana_url String
+
+  @@map("qr-codes")
+}
+
+model Users {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  user  String @unique
+  xp    Int
+  level Int
+  rank  Int
+
+  @@map("users")
+}
+
+model Nft {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  user         String @unique
+  public_key   String
+  mint_address String @unique
+
+  @@map("nfts")
+}
+
+
+model ExpirableScans {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  public_key String
+  qr_code_id String   @unique
+  reference  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  @@map("expirable-scans")
+}
